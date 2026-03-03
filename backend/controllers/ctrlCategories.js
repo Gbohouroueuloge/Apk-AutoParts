@@ -13,7 +13,7 @@ const getCategories = async (req, res) => {
 const getCategorieById = async (req, res) => {
   try {
     const categorie = await categoriesdb.getCategorieById(req.params.catId);
-    res.status(200).json(categories);
+    res.status(200).json(categorie);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -47,7 +47,6 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
-    if (!confirm("Etes vous sur de vouloir supprimer cette categorie ?")) return
     const deletedCategory = await categoriesdb.deleteCategory(req.params.id);
     res.status(200).json(deletedCategory);
   } catch (error) {
@@ -57,7 +56,6 @@ const deleteCategory = async (req, res) => {
 
 const deleteAllCategories = async (req, res) => {
   try {
-    if (!confirm("Etes vous sur de vouloir supprimer tous les categories ?")) return
     const deletedCategories = await categoriesdb.deleteAllCategory();
     res.status(200).json(deletedCategories);
   } catch (error) {

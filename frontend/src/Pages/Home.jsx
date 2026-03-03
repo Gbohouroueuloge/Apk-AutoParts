@@ -1,12 +1,23 @@
 import { useArticles } from "../Context/articlesContext"
 import { useCategories } from "../Context/categoriesContext";
 import { Settings } from "lucide-react"
+import Modal from "../Compoments/Modals";
+import { useState } from "react";
 
 const Home = () => {
   const { articles } = useArticles();
   const { categories } = useCategories();
 
-  console.log(articles)
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getStatus = (quantity) => {
+    if (quantity === 0) return {text: "Rupture de Stock", color: {text: "text-red-500", other: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"}};
+    if (quantity <= 5) return {text: "Critique", color: {text: "text-yellow-500", other: "bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400"}};
+    if (quantity <= 10) return {text: "Faible", color: {text: "text-orange-500", other: "bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400"}};
+    return {text: "Stock Disponible", color: {text: "text-green-500", other: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"}};
+  };
+
+  const articleToShow = articles.filter((article) => article.quantite <= 20).slice(0, 8);
 
   return (
     <main className="flex-1 flex flex-col h-full overflow-y-auto bg-background-light dark:bg-background-dark">
@@ -26,7 +37,7 @@ const Home = () => {
           <div
             className="bg-white dark:bg-[#1e2736] rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
-              {articles.length >= 0 ?
+              {articleToShow.length >= 0 ?
                 (
                   <table className="w-full text-left text-sm">
                     <thead
@@ -42,104 +53,34 @@ const Home = () => {
                     </thead>
                     <tbody
                       className="divide-y divide-slate-200 dark:divide-slate-700 text-slate-700 dark:text-slate-200">
-                      {articles.map((article) => (
-                        <tr
-                          key={article.id}
-                          className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
-                        >
-                          <td className="px-6 py-4 font-medium flex items-center gap-3">
-                            <div className="h-10 w-10 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-                              <Settings className="w-9 h-9 text-primary" />
-                            </div>
-                            <p>{article.name}</p>
-                          </td>
-                          <td className="px-6 py-4 text-slate-500 dark:text-slate-400">BP-2024-X</td>
-                          <td className="px-6 py-4">Freins</td>
-                          <td className="px-6 py-4 font-bold text-red-500">2 restant</td>
-                          <td className="px-6 py-4">
-                            <span
-                              className="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">Critique</span>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <button
-                              className="text-primary hover:text-blue-400 font-medium text-xs">Réapprovisionner</button>
-                          </td>
-                        </tr>
-                      ))}
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td className="px-6 py-4 font-medium flex items-center gap-3">
-                          <div className="h-10 w-10 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
-                            <Settings className="w-9 h-9 text-primary" />
-                          </div>
-                          <p>Plaquettes de frein céramique</p>
-                        </td>
-                        <td className="px-6 py-4 text-slate-500 dark:text-slate-400">BP-2024-X</td>
-                        <td className="px-6 py-4">Freins</td>
-                        <td className="px-6 py-4 font-bold text-red-500">2 restant</td>
-                        <td className="px-6 py-4">
-                          <span
-                            className="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">Critique</span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <button
-                            className="text-primary hover:text-blue-400 font-medium text-xs">Réapprovisionner</button>
-                        </td>
-                      </tr>
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td className="px-6 py-4 font-medium flex items-center gap-3">
-                          <div className="h-10 w-10 rounded bg-slate-100 dark:bg-slate-700 bg-center bg-cover"
-                            style={{ backgroundImage: "url('src/assets/home2.png')" }}>
-                          </div>Filtre à Huile Type A
-                        </td>
-                        <td className="px-6 py-4 text-slate-500 dark:text-slate-400">OF-9921-A</td>
-                        <td className="px-6 py-4">Filtres</td>
-                        <td className="px-6 py-4 font-bold text-orange-500">8 restant</td>
-                        <td className="px-6 py-4">
-                          <span
-                            className="px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">Faible</span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <button
-                            className="text-primary hover:text-blue-400 font-medium text-xs">Réapprovisionner</button>
-                        </td>
-                      </tr>
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td className="px-6 py-4 font-medium flex items-center gap-3">
-                          <div className="h-10 w-10 rounded bg-slate-100 dark:bg-slate-700 bg-center bg-cover"
-                            style={{ backgroundImage: "url('src/assets/home3.png')" }}>
-                          </div>Jeu de Bougies d'Allumage
-                        </td>
-                        <td className="px-6 py-4 text-slate-500 dark:text-slate-400">SP-4410-Z</td>
-                        <td className="px-6 py-4">Allumage</td>
-                        <td className="px-6 py-4 font-bold text-orange-500">12 restant</td>
-                        <td className="px-6 py-4">
-                          <span
-                            className="px-2.5 py-1 rounded-full text-xs font-semibold bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">Faible</span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <button
-                            className="text-primary hover:text-blue-400 font-medium text-xs">Réapprovisionner</button>
-                        </td>
-                      </tr>
-                      <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td className="px-6 py-4 font-medium flex items-center gap-3">
-                          <div className="h-10 w-10 rounded bg-slate-100 dark:bg-slate-700 bg-center bg-cover"
-                            style={{ backgroundImage: "url('src/assets/home4.png')" }}>
-                          </div>Ampoule de Phare H4
-                        </td>
-                        <td className="px-6 py-4 text-slate-500 dark:text-slate-400">HL-5500-W</td>
-                        <td className="px-6 py-4">Éclairage</td>
-                        <td className="px-6 py-4 font-bold text-red-500">0 restant</td>
-                        <td className="px-6 py-4">
-                          <span
-                            className="px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400">En
-                            Rupture</span>
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <button
-                            className="text-primary hover:text-blue-400 font-medium text-xs">Commander</button>
-                        </td>
-                      </tr>
+                      {articleToShow.map((article) => {
+                        const category = categories.find((cat) => cat.id === article.categorie_id);
+                        const { text, color } = getStatus(article.quantite);
+                        return (
+                          <tr
+                            key={article.id}
+                            className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
+                          >
+                            <td className="px-6 py-4 font-medium flex items-center gap-3">
+                              <div className="h-10 w-10 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center">
+                                <Settings className="w-9 h-9 text-primary" />
+                              </div>
+                              <p>{article.nom}</p>
+                            </td>
+                            <td className="px-6 py-4 text-slate-500 dark:text-slate-400">#{article.id}</td>
+                            <td className="px-6 py-4">{category?.nom}</td>
+                            <td className={`px-6 py-4 font-bold ${color.text}`}>{article.quantite} restant</td>
+                            <td className="px-6 py-4">
+                              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${color.other}`}>{text}</span>
+                            </td>
+                            <td className="px-6 py-4 text-right">
+                              <button
+                                className="text-primary hover:text-blue-400 font-medium text-xs">Réapprovisionner</button>
+                            </td>
+                          </tr>
+                        )
+                      }
+                      )}
                     </tbody>
                   </table>
                 ) : (
@@ -197,7 +138,22 @@ const Home = () => {
         </div>
       </div>
 
+      {/* <!-- Add Article Modal --> */}
+      <button
+        className="fixed bottom-6 right-6 flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white hover:bg-primary-focus transition-colors shadow-md"
+        onClick={() => setIsOpen(true)}>
+        <span className="material-symbols-outlined">add</span>
+      </button>
 
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Ajouter un Article"
+        size="modal-lg"
+        variant="default"
+      >
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      </Modal>
 
     </main>
   )
